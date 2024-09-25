@@ -80,7 +80,7 @@ export default {
     return {
       // Assuming images are placed in the `public` folder
       logo: "/icons/logo.png", // Image path relative to public folder
-      frame272: "/icons/frame272.png", // Image path relative to public folder
+      frame272: "/icons/Frame272.png", // Image path relative to public folder
       shoppingcart: "/icons/frame66.png", // Image path relative to public folder
       frame66: "/icons/shopping.png", // Image path relative to public folder
       dropdownOpen: false,
