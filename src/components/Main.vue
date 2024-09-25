@@ -1,7 +1,7 @@
 <!-- src/components/HelloWorld.vue -->
 <template>
     <main className='mt-4 md:mt-0 ml-9 mr-9'>
-        <h2 className=" text-2xl md:text-3xl font-bold md:mb-6">Generate your invoice with AI</h2>
+        <h2 className=" text-xl md:text-3xl font-bold md:mb-6">Generate your invoice with AI</h2>
 
         <h3 className="text-2xl font-semibold bg-slate-800 text-white p-4 rounded-3xl">Hello! Welcome to Tuaneka. How can we help you today?</h3>
 
@@ -18,7 +18,7 @@
           <textarea
             className="w-full h-[28vh] md:h-[38vh] border-none focus:border-none focus:outline-none focus:ring-0 p-2 align-top"
           />
-          <div className='pr-5 text-end'>
+          <div className='md:pr-5 text-center md:text-end'>
           <Button className='text-sm py-2 px-6 bg-pink-600 rounded-xl w-44 text-white'>Generate</Button>
           </div>
         </div>
