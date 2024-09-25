@@ -48,10 +48,10 @@
   </nav>
 
   <div class="p-4 md:ml-44 md:mr-40">
-    <!-- <MainPage /> -->
+    <MainPage />
     <!-- <InvoiceGenerate2 /> -->
     <!-- <InvoiceGenerate3 /> -->
-    <PreView />
+    <!-- <PreView /> -->
     <!-- <InvoiceGenerate1 /> -->
   </div>
 </template>
