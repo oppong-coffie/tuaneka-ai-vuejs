@@ -4,12 +4,14 @@
     <header
       class="flex justify-between items-center mb-5 md:mb-8 md:ml-9 md:mr-40"
     >
+    <a href="https://tuaneka.com/dashboard">
       <div class="flex items-center gap-2 md:gap-7">
         <!-- Logo Image -->
         <img class="w-2/4" :src="logo" alt="Logo" />
         <!-- Frame272 Image -->
         <img class="w-4 md:w-6" :src="frame272" alt="Frame 272" />
       </div>
+      </a>
       <div class="flex items-center md:space-x-5">
         <!-- Frame66 Image -->
         <img class="w-24 md:w-7" :src="frame66" alt="Frame 66" />
