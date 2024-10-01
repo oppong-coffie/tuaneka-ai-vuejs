@@ -47,14 +47,14 @@
       <hi className="font-semibold px-2">Ama</hi>
       <ChevronDown fill="black" />
     </div>
-  </nav>
+  </nav>  
 
   <div class="p-4 md:ml-44 md:mr-40">
     <MainPage />
+    <!-- <InvoiceGenerate1 /> -->
     <!-- <InvoiceGenerate2 /> -->
     <!-- <InvoiceGenerate3 /> -->
     <!-- <PreView /> -->
-    <!-- <InvoiceGenerate1 /> -->
   </div>
 </template>
 

@@ -1,27 +1,131 @@
-<!-- src/components/HelloWorld.vue -->
 <template>
-    <main className='mt-4 md:mt-0 ml-9 mr-9'>
-        <h2 className=" text-xl md:text-3xl font-bold md:mb-6">Generate your invoice with AI</h2>
+  <div class="container mx-auto mt-5 p-5">
+    <h2 class="text-2xl font-bold mb-5">Chat with Botpress AI</h2>
 
-        <h3 className="text-2xl font-semibold bg-slate-800 text-white p-4 rounded-3xl">Hello! Welcome to Tuaneka. How can we help you today?</h3>
+    <!-- Display bot message -->
+    <div v-if="botMessage" class="mb-5">
+      <div class="p-3 bg-gray-200 rounded-md">{{ botMessage }}</div>
+    </div>
 
-        <div className='flex justify-start items-center gap-1 pt-6 md:pt-6 md:py-1'>
-          <h4 className="font-semibold b-2">Suggested Prompts </h4>
-          <h6 className='text-sm bg-pink-600 rounded-full w-2 h-2 flex justify-center p-2 text-white items-center'>?</h6>
-        </div>
+    <!-- User input -->
+    <div class="mb-5">
+      <input
+        v-model="userInput"
+        type="text"
+        placeholder="Type your message here..."
+        class="w-full p-3 border rounded-md"
+        @keydown.enter="handleUserInput"
+        :disabled="isWaitingForBotResponse"
+      />
+    </div>
 
-        <div className='border  md:h-[53vh] rounded-2xl p-3'>
-          <div className="flex space-x-4">
-            <Button className='text-sm px-6 py-2 bg-pink-600 rounded-full text-white'>I need a new invoice</Button>
-            <Button className='hidden md:block text-sm px-6 py-2 bg-pink-600 rounded-full text-white'>send an invoice to teamafly ltd for 300.00 for webdesign services</Button>
-          </div>
-          <textarea
-            className="w-full h-[28vh] md:h-[38vh] border-none focus:border-none focus:outline-none focus:ring-0 p-2 align-top"
-          />
-          <div className='md:pr-5 text-center md:text-end'>
-          <Button className='text-sm py-2 px-6 bg-pink-600 rounded-xl w-44 text-white'>Generate</Button>
-          </div>
-        </div>
-      </main>
-  </template>
-  
+    <!-- Send button -->
+    <div>
+      <button
+        @click="handleUserInput"
+        class="bg-blue-500 text-white py-2 px-5 rounded-md"
+        :disabled="isWaitingForBotResponse"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Client } from "@botpress/chat";
+
+const clientId = "18a02620-4a4c-47d3-8062-ef73f31daa88"; // Your Botpress Client ID
+
+export default {
+  data() {
+    return {
+      userInput: "", // stores user's current message
+      botMessage: "", // stores the bot's latest response
+      conversationId: null, // stores the current conversation ID
+      key: null, // stores the user key from Botpress
+      client: null, // Botpress client instance
+      isWaitingForBotResponse: false, // flag to track if bot response is pending
+    };
+  },
+  async mounted() {
+    // Start conversation when component is mounted
+    await this.startConversation();
+  },
+  methods: {
+    // Initialize Botpress client and start a new conversation
+    async startConversation() {
+      try {
+        this.client = new Client({ apiUrl: `https://chat.botpress.cloud/${clientId}` });
+
+        // Create a new user and get the user key
+        const { user, key } = await this.client.createUser({});
+        this.key = key;
+
+        console.log(`User Id: ${user.id}`);
+
+        // Start a new conversation
+        const { conversation } = await this.client.createConversation({
+          "x-user-key": key,
+        });
+        this.conversationId = conversation.id;
+
+        console.log(`Conversation Id: ${this.conversationId}`);
+
+        // Send the initial message to the bot
+        await this.sendMessageToBot("Hello! Let's start the conversation.");
+      } catch (error) {
+        console.error("Error starting conversation:", error);
+      }
+    },
+
+    // Send a message to the bot
+    async sendMessageToBot(message) {
+      try {
+        this.isWaitingForBotResponse = true; // Lock input
+
+        const { message: botMessage } = await this.client.createMessage({
+          payload: { type: "text", text: message },
+          "x-user-key": this.key, // Include the user key
+          conversationId: this.conversationId,
+        });
+
+        console.log("Bot Response:", botMessage);
+
+        // Check if the response has a payload and is of type text
+        if (botMessage && botMessage.payload) {
+          if (botMessage.payload.type === "text") {
+            this.botMessage = botMessage.payload.text; // Set the bot message
+          } else {
+            console.warn("Unexpected message type:", botMessage.payload.type);
+          }
+        } else {
+          console.warn("Bot response format is unexpected:", botMessage);
+        }
+
+        this.isWaitingForBotResponse = false; // Unlock input after receiving the response
+      } catch (error) {
+        console.error("Error sending message to bot:", error);
+        this.isWaitingForBotResponse = false; // Unlock input in case of error
+      }
+    },
+
+    // Handle user input and send it to the bot
+    async handleUserInput() {
+      if (!this.userInput || this.isWaitingForBotResponse) return;
+
+      const message = this.userInput;
+
+      // Clear the input field
+      this.userInput = "";
+
+      // Send the user message to the bot
+      await this.sendMessageToBot(message);
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* Add any custom styles here */
+</style>
